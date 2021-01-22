@@ -1,10 +1,7 @@
 """Factory for stages.
 """
-from base_stage import BaseStage
-from stage_download import DownloadStage
-from stage_sql_script import SqlScriptStage
-from stage_connect_sql import ConnectSqlStage
-from stage_disconnect_sql import DisconnectSqlStage
+from stage_web_scrapping import WebScrappingStage
+from stage_text_cleaning import TextCleaningStage
 from pipeline import Pipeline
 
 import constants
@@ -13,7 +10,7 @@ from os.path import join
 
 import yaml
 
-possible_stages = [DownloadStage, SqlScriptStage, ConnectSqlStage, DisconnectSqlStage]
+possible_stages = [WebScrappingStage, TextCleaningStage]
 stage_name_mapping = {s.name: s for s in possible_stages}
 
 def create_stage(stage_config):

@@ -43,7 +43,6 @@ class BaseStage(metaclass=abc.ABCMeta):
         Args:
             args: command line arguments that are passed to the stage.
         """
-        pass
 
     @abc.abstractmethod
     def run(self, args):
@@ -62,7 +61,8 @@ class BaseStage(metaclass=abc.ABCMeta):
         Args:
             args: command line arguments that are passed to the stage.
         """
-        pass
+        self.logger.info("-" * 40)
+        self.logger.info("=" * 40)
 
     def on_failure(self, args):
         """The function that is executed after the stage run failed.
@@ -70,7 +70,6 @@ class BaseStage(metaclass=abc.ABCMeta):
         Args:
             args: command line arguments that are passed to the stage.
         """
-        pass
 
     def get_base_argument_parser(self, use_shared_parser=False, add_help=False, description=""):
         """Returns Argument Parser to use for the stage.
