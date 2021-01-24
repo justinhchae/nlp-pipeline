@@ -1,3 +1,5 @@
-pyyaml
-sparqlwrapper
 pandas
+pywikibot
+pyyaml
+requests
+sparqlwrapper

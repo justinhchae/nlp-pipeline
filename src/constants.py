@@ -11,5 +11,4 @@ TMP_PATH = join(WORKFLOW_ROOT, "tmp")
 SQL_SCRIPTS_PATH = join(WORKFLOW_ROOT, "sql_scripts")
 CONFIG_PATH = join(WORKFLOW_ROOT, "configs")
 
-TOPIC = "president"
 WIKIDATA_URL = "https://query.wikidata.org/sparql"

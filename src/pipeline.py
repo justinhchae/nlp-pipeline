@@ -17,19 +17,20 @@ class Pipeline(BaseStage):
     """
     logger = logging.getLogger("pipeline")
 
-    def __init__(self, parent=None, name=None, stages=None):
+    def __init__(self, parent=None, stages=None, topic="default"):
         """Init function for the pipeline.
 
         Args:
             parent: parent stage.
             stages: a list of stages.
         """
-        super(Pipeline, self).__init__(parent, name)
+        super(Pipeline, self).__init__(parent)
         self.stages = stages
         for stage in self.stages:
             stage.parent = self
         self.stages_dict = {stage.name:stage for stage in self.stages}
         self.stages_executed = {stage.name:False for stage in self.stages}
+        self.topic = topic
 
     def get_argument_parser(self):
         """Returns argument parser for the pipeline / workflow.
