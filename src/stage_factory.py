@@ -1,6 +1,6 @@
 """Factory for stages.
 """
-from stage_web_scrapping import WebScrappingStage
+from stage_web_scraping import WebScrapingStage
 from stage_text_cleaning import TextCleaningStage
 from pipeline import Pipeline
 
@@ -10,7 +10,7 @@ from os.path import join
 
 import yaml
 
-possible_stages = [WebScrappingStage, TextCleaningStage]
+possible_stages = [WebScrapingStage, TextCleaningStage]
 stage_name_mapping = {s.name: s for s in possible_stages}
 
 def create_stage(stage_config):

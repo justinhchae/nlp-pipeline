@@ -1,6 +1,6 @@
-# A template for creating python based pipeline / workflows
+# NLP pipeline
 
-This is a template I created for python-based pipelines and workflows.
+This is an NLP pipeline used for MSAI337 class at Northwestern.
 
 ## Instructions
 
