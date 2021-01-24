@@ -8,6 +8,10 @@ __pycache__/
 /logs
 /output
 
+apicache-py3/
+pywikibot.lwp
+throttle.ctrl
+
 # C extensions
 *.so
 
