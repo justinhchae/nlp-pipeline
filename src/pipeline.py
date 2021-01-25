@@ -28,8 +28,6 @@ class Pipeline(BaseStage):
         self.stages = stages
         for stage in self.stages:
             stage.parent = self
-        self.stages_dict = {stage.name:stage for stage in self.stages}
-        self.stages_executed = {stage.name:False for stage in self.stages}
         self.topic = topic
 
     def get_argument_parser(self):
@@ -66,13 +64,10 @@ class Pipeline(BaseStage):
         Returns:
             True if the workflow / pipeline execution succeded, False otherwise.
         """
-        for stage in args.stage:
-            self.logger.info("Executing stage '{}'".format(stage))
-            if self.stages_executed[stage]:
-                self.logger.warning("Executing stage '{}' more than once".format(stage))
-            if not self.stages_dict[stage].execute(args):
+        for stage in self.stages:
+            self.logger.info("Executing stage '{}'".format(stage.name))
+            if not stage.execute(args):
                 return False
-            self.stages_executed[stage] = True
 
         return True
 
