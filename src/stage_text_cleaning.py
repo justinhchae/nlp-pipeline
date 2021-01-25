@@ -72,7 +72,7 @@ class TextCleaningStage(BaseStage):
         text = re.sub('\[(.*?)\]', '', text)
 
         self.logger.info("Replacing years with <<year>>")
-        text = re.sub('[\s\W]\d{4}[\s\Ws]', ' <<year>> ', text)
+        text = re.sub('[\s\W]\d{4}', ' <<year>> ', text)
 
         self.logger.info("Refactoring possesive 's")
         text = re.sub('\'s', ' s', text)
@@ -85,6 +85,7 @@ class TextCleaningStage(BaseStage):
         text = re.sub('==+', ' ', text)
 
         self.logger.info("Removing extra spaces")
+        text = re.sub('&nbsp', '', text)
         text = re.sub('\s\s+', ' ', text)
 
         with open(output_file_path, "w") as file:
