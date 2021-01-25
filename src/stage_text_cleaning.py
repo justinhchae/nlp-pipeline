@@ -5,8 +5,11 @@ from configuration import run_configuration
 
 import constants
 
+from os.path import join
+
 import argparse
 import logging
+import re
 
 
 class TextCleaningStage(BaseStage):
@@ -23,7 +26,6 @@ class TextCleaningStage(BaseStage):
         """
         self.logger.info("=" * 40)
         self.logger.info("Executing text cleaning stage")
-        self.logger.info("Using following arguments:")
         self.logger.info("-" * 40)
 
     def run(self, args):
@@ -35,8 +37,60 @@ class TextCleaningStage(BaseStage):
         Returns:
             True if the stage execution succeded, False otherwise.
         """
-        self.logger.info("Starting download")
-        self.logger.info("Download finished")
+        self.logger.info("Starting text cleaning...")
+        input_file_path = join(constants.TMP_PATH, "{}.raw.txt".format(self.parent.topic))
+        output_file_path = join(constants.TMP_PATH, "{}.clean.txt".format(self.parent.topic))
+
+        with open(input_file_path, "r") as file:
+            text = file.read()
+
+        self.logger.info("Removing {{...}}")
+        text = re.sub('\{{2}(.*?)\}{2}', '', text)
+
+        self.logger.info("Removing new lines")
+        text = re.sub('\n', ' <<new_line>> ', text)
+
+        self.logger.info("Removing {{...}}")
+        text = re.sub('\{{2}(.*?)\}{2}', '', text)
+
+        self.logger.info("Removing {|...|}")
+        text = re.sub('\{\|(.*?)\|\}', '', text)
+
+        self.logger.info("Removing [[File: ...]]")
+        text = re.sub('\[{2}File(.*?)\]{2}', '', text)
+
+        self.logger.info("Removing <ref>...</ref>")
+        text = re.sub('<ref(.*?)>(.*?)</ref>', '', text)
+
+        self.logger.info("Removing <gallery>...</gallery>")
+        text = re.sub('<gallery(.*?)>(.*?)</gallery>', '', text)
+
+        self.logger.info("Opening [[...]]")
+        text = re.sub('\[{2}(.*?)(\|[\w\s\|]*)?\]{2}', '\\1', text)
+
+        self.logger.info("Removing [...]")
+        text = re.sub('\[(.*?)\]', '', text)
+
+        self.logger.info("Replacing years with <<year>>")
+        text = re.sub('[\s\W]\d{4}[\s\Ws]', ' <<year>> ', text)
+
+        self.logger.info("Refactoring possesive 's")
+        text = re.sub('\'s', ' s', text)
+
+        self.logger.info("Removing quotation marks")
+        text = re.sub('[\'\"]+', ' ', text)
+
+        self.logger.info("Section titles")
+        #text = re.sub('==+(.*?)==+', ' <<title_start>> \\1 <<title_end>> ', text)
+        text = re.sub('==+', ' ', text)
+
+        self.logger.info("Removing extra spaces")
+        text = re.sub('\s\s+', ' ', text)
+
+        with open(output_file_path, "w") as file:
+            file.write(text)
+            num_tokens = len(text.split(" "))
+            self.logger.info("Saved the cleaned text. Contains ~ {} tokens".format(num_tokens))
         return True
 
     def get_argument_parser(self, use_shared_parser=False, add_help=False):

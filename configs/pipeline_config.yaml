@@ -4,4 +4,3 @@ stages:
 - name: web_scraping
   sparql_file: countries.sparql
 - name: text_cleaning
-#- name: ngram_model
