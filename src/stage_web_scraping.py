@@ -16,6 +16,14 @@ import pywikibot
 
 
 def get_article_list(sparql_file_path):
+    """Helper function that performs sparql query to find the articles for scrapping.
+
+    Args:
+        sparql_file_path: the path to the file that contains sparql query.
+
+    Returns:
+        Pandas data frame containing the result of the query.
+    """
     with open(sparql_file_path, "r") as query_file:
         query = query_file.read()
         sparql = SPARQLWrapper(constants.WIKIDATA_URL)
@@ -25,14 +33,27 @@ def get_article_list(sparql_file_path):
         results_df = pd.json_normalize(results['results']['bindings'])
         return results_df
 
-def scrape_article(site, query_row):
+def scrape_article(site, query_row, min_num_tokens=500):
+    """Helper function that scrapes 1 wikipedia article.
+
+    Args:
+        site: pywikibot Site.
+        query_row: 1 row of the result from the sparql query.
+        min_num_tokens: required minimum number of tokens in the page.
+
+    Returns:
+        String with the article, if it has more than min_num_tokens tokens.
+    """
     entry_label = query_row["hLabel.value"]
     try:
         page = pywikibot.Page(site, entry_label)
-        result = "<<start_article>> {} <<end_article>>\n".format(page.text)
+        num_tokens = page.text.split("")
+        if num_tokens < min_num_tokens:
+            result = ""
+        else:
+            result = "<<article_start>> {} <<article_end>>\n".format(page.text)
     except Exception:
         result = ""
-
     return result
 
 class WebScrapingStage(BaseStage):
@@ -41,15 +62,17 @@ class WebScrapingStage(BaseStage):
     name = "web_scraping"
     logger = logging.getLogger("pipeline").getChild("web_scraping_stage")
 
-    def __init__(self, parent=None, sparql_file="search_query.sparql"):
+    def __init__(self, parent=None, sparql_file="search_query.sparql", min_num_tokens=500):
         """Initialization for Web Scraping stage.
 
         Args:
             parent: The parent stage.
             sparql_file: file with sparql query for wikidata.
+            min_num_tokens: The minimum number of tokens in the article.
         """
         super(WebScrapingStage, self).__init__(parent)
         self.search_query_file_path = join(constants.SQL_SCRIPTS_PATH, sparql_file)
+        self.min_num_tokens = min_num_tokens
 
     def pre_run(self, args):
         """The function that is executed before the stage is run.
@@ -62,7 +85,7 @@ class WebScrapingStage(BaseStage):
         self.logger.info("-" * 40)
 
     def run(self, args):
-        """Downloads the db file from the url.
+        """Scraps the articles from wikipedia.
 
         Args:
             args: arguments that are passed to the stage.
@@ -79,7 +102,7 @@ class WebScrapingStage(BaseStage):
         output_file_path = join(constants.TMP_PATH, "{}.raw.txt".format(self.parent.topic))
         with open(output_file_path, "a") as output_file:
             for i in range(len(article_list)):
-                output_file.write(scrape_article(site, article_list.iloc[i]))
+                output_file.write(scrape_article(site, article_list.iloc[i], self.min_num_tokens))
                 if i % step_size == step_size - 1:
                     self.logger.info("Scraped {} articles out of {}".format(i+1, len(article_list)))
 

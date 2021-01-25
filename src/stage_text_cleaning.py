@@ -5,12 +5,19 @@ from configuration import run_configuration
 
 import constants
 
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
 from os.path import join
+from wiki_dump_reader import Cleaner
 
 import argparse
 import logging
+import nltk
 import re
 
+
+nltk.download('punkt')
+nltk.download('wordnet')
 
 class TextCleaningStage(BaseStage):
     """Stage for cleaning text data.
@@ -29,7 +36,7 @@ class TextCleaningStage(BaseStage):
         self.logger.info("-" * 40)
 
     def run(self, args):
-        """Downloads the db file from the url.
+        """Cleans the text gotten from wikipedia.
 
         Args:
             args: arguments that are passed to the stage.
@@ -40,52 +47,51 @@ class TextCleaningStage(BaseStage):
         self.logger.info("Starting text cleaning...")
         input_file_path = join(constants.TMP_PATH, "{}.raw.txt".format(self.parent.topic))
         output_file_path = join(constants.TMP_PATH, "{}.clean.txt".format(self.parent.topic))
+        cleaner = Cleaner()
 
         with open(input_file_path, "r") as file:
             text = file.read()
 
-        self.logger.info("Removing {{...}}")
-        text = re.sub('\{{2}(.*?)\}{2}', '', text)
-
-        self.logger.info("Removing new lines")
-        text = re.sub('\n', ' <<new_line>> ', text)
-
-        self.logger.info("Removing {{...}}")
-        text = re.sub('\{{2}(.*?)\}{2}', '', text)
-
-        self.logger.info("Removing {|...|}")
-        text = re.sub('\{\|(.*?)\|\}', '', text)
-
-        self.logger.info("Removing [[File: ...]]")
-        text = re.sub('\[{2}File(.*?)\]{2}', '', text)
-
-        self.logger.info("Removing <ref>...</ref>")
-        text = re.sub('<ref(.*?)>(.*?)</ref>', '', text)
-
-        self.logger.info("Removing <gallery>...</gallery>")
-        text = re.sub('<gallery(.*?)>(.*?)</gallery>', '', text)
-
-        self.logger.info("Opening [[...]]")
-        text = re.sub('\[{2}(.*?)(\|[\w\s\|]*)?\]{2}', '\\1', text)
-
-        self.logger.info("Removing [...]")
-        text = re.sub('\[(.*?)\]', '', text)
-
-        self.logger.info("Replacing years with <<year>>")
-        text = re.sub('[\s\W]\d{4}', ' <<year>> ', text)
-
-        self.logger.info("Refactoring possesive 's")
-        text = re.sub('\'s', ' s', text)
-
-        self.logger.info("Removing quotation marks")
-        text = re.sub('[\'\"]+', ' ', text)
-
-        self.logger.info("Section titles")
-        #text = re.sub('==+(.*?)==+', ' <<title_start>> \\1 <<title_end>> ', text)
-        text = re.sub('==+', ' ', text)
-
-        self.logger.info("Removing extra spaces")
         text = re.sub('&nbsp', '', text)
+
+        self.logger.info("Cleaning the markup and applying token-wise operations")
+        lemmatizer = WordNetLemmatizer()
+        articles = text.split("<<article_end>>")
+        for i in range(len(articles)):
+            article = articles[i]
+            # Removing special tokens
+            article = re.sub('<<article_start>>', '', article)
+            # Removing wikipedia markup
+            article = cleaner.clean_text(article)
+            # Removing left out >
+            article = re.sub(">", '', article)
+            # Openning up [[...]]
+            article = re.sub('\[{2}(.*?)(\|[\w\s\|]*)?\]{2}', '\\1', article)
+            # Removing |
+            article = re.sub('\|', ' ', article)
+
+            tokens = word_tokenize(article)
+            for j in range(len(tokens)):
+                token = tokens[j]
+                token = token.lower()
+                token = lemmatizer.lemmatize(token)
+                tokens[j] = token
+            article = " ".join(tokens)
+
+            articles[i] = "<<article_start>> {} <<article_end>>".format(article)
+        text = " ".join(articles)
+
+        self.logger.info("Changing years to <<year>>")
+        text = re.sub(' \d{4}(\-\d+|s)?', ' <<year>>', text)
+
+        self.logger.info("Changing numbers to <<number>>")
+        text = re.sub(' \d[\d\.,%]*(st|nd|rd|th| %)?', ' <<number>>', text)
+        text = re.sub('<<number>>\-[\d\.,%]+', '<<number>>', text)
+
+        self.logger.info("Section title formatting")
+        text = re.sub('==+(.*?)==+', '<section_title_start> \\1 <section_title_end>>', text)
+
+        self.logger.info("Removing extra white-spaces")
         text = re.sub('\s\s+', ' ', text)
 
         with open(output_file_path, "w") as file:

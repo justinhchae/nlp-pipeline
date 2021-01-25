@@ -1,5 +1,7 @@
+nltk
 pandas
 pywikibot
 pyyaml
 requests
 sparqlwrapper
+wiki-dump-reader
