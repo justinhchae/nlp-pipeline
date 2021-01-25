@@ -108,8 +108,5 @@ class TextCleaningStage(BaseStage):
             add_help: whether to add help.
         """
         parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Download stage of the pipeline / workflow")
-        #parser.add_argument("--url",
-        #                    help="url for data downloading.",
-        #                    default=constants.SQL_DB_FILE_URL)
+                                               "Text cleaning stage of the pipeline / workflow")
         return parser

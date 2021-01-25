@@ -47,7 +47,7 @@ def scrape_article(site, query_row, min_num_tokens=500):
     entry_label = query_row["hLabel.value"]
     try:
         page = pywikibot.Page(site, entry_label)
-        num_tokens = page.text.split("")
+        num_tokens = len(page.text.split(" "))
         if num_tokens < min_num_tokens:
             result = ""
         else:
@@ -100,7 +100,7 @@ class WebScrapingStage(BaseStage):
         site = pywikibot.Site("en", "wikipedia")
         step_size = len(article_list) // 10
         output_file_path = join(constants.TMP_PATH, "{}.raw.txt".format(self.parent.topic))
-        with open(output_file_path, "a") as output_file:
+        with open(output_file_path, "w") as output_file:
             for i in range(len(article_list)):
                 output_file.write(scrape_article(site, article_list.iloc[i], self.min_num_tokens))
                 if i % step_size == step_size - 1:
@@ -108,7 +108,7 @@ class WebScrapingStage(BaseStage):
 
         with open(output_file_path, "r") as output_file:
             num_tokens = len(output_file.read().split(" "))
-            self.logger.info("Scraping finished. Output countains ~ {} tokens".format(num_tokens))
+            self.logger.info("Scraping finished. Output contains ~ {} tokens".format(num_tokens))
         return True
 
     def get_argument_parser(self, use_shared_parser=False, add_help=False):
