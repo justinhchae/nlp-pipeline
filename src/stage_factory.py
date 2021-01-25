@@ -1,9 +1,10 @@
 """Factory for stages.
 """
-from stage_web_scraping import WebScrapingStage
-from stage_text_cleaning import TextCleaningStage
 from stage_corpus_analysis import CorpusAnalysisStage
 from stage_corpus_split import CorpusSplitStage
+from stage_frequency_filtering import FrequencyFilteringStage
+from stage_text_cleaning import TextCleaningStage
+from stage_web_scraping import WebScrapingStage
 from pipeline import Pipeline
 
 import constants
@@ -15,6 +16,7 @@ import yaml
 possible_stages = [WebScrapingStage,
                    TextCleaningStage,
                    CorpusAnalysisStage,
+                   FrequencyFilteringStage,
                    CorpusSplitStage]
 stage_name_mapping = {s.name: s for s in possible_stages}
 

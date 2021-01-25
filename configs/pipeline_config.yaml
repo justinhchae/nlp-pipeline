@@ -1,6 +1,44 @@
 ---
 topic: countries
 stages:
-- name: web_scraping
-  sparql_file: countries.sparql
-- name: text_cleaning
+#- name: web_scraping
+#  sparql_file: countries.sparql
+#- name: text_cleaning
+#- name: corpus_split
+#  splits:
+#   - name: train
+#     proportion: 80
+#   - name: test
+#     proportion: 10
+#   - name: valid
+#     proportion: 10
+
+#- name: corpus_analysis
+#  corpus_file: train.txt
+#- name: corpus_analysis
+#  corpus_file: test.txt
+#- name: corpus_analysis
+#  corpus_file: valid.txt
+
+- name: frequency_filtering
+  frequency_threshold: 0
+
+- name: frequency_filtering
+  frequency_threshold: 3
+#- name: something_something
+#  frequency_threshold: 0
+#- name: srilm_model
+#  ngram: 2
+#- name: srilm_model
+#  ngram: 3
+#- name: srilm_model
+#  ngram: 5
+
+#- name: something_something
+#  frequency_threshold: 3
+#- name: srilm_model
+#  ngram: 2
+#- name: srilm_model
+#  ngram: 3
+#- name: srilm_model
+#  ngram: 5
