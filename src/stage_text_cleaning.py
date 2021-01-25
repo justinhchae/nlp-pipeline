@@ -89,7 +89,7 @@ class TextCleaningStage(BaseStage):
         text = re.sub('<<number>>\-[\d\.,%]+', '<<number>>', text)
 
         self.logger.info("Section title formatting")
-        text = re.sub('==+(.*?)==+', '<section_title_start> \\1 <section_title_end>>', text)
+        text = re.sub('==+(.*?)==+', '<<section_title_start>> \\1 <<section_title_end>>', text)
 
         self.logger.info("Removing extra white-spaces")
         text = re.sub('\s\s+', ' ', text)
