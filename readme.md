@@ -1,23 +1,29 @@
 # NLP pipeline
 
-This is an NLP pipeline used for MSAI337 class at Northwestern.
+This is an NLP pipeline.
 
-## Instructions
+## Overview
 
-### Creating new stage
+This is a natural-language processing pipeline. Currently it supports these stages:
 
-To create a new stage in your pipeline, you have to create a new class that inherits from BaseStage and define the run function. (See stage_download for reference).
+1. Scrape articles from the Wikipedia.
+2. Clean the scraped text.
+3. Perform a rudimentary analysis on the cleaned text.
+4. Split the text into training / testing / validation files.
+5. Perform frequency filtering.
 
-### Command line arguments
+## Executing pipeline / workflow
 
-This template uses argparse library for command line argument parsing. See [argparse](https://docs.python.org/3/library/argparse.html#nargs) for documentation.
+Edit the pipeline_config file to run the stages that you want, and run the following command:
+```
+make run
+```
 
-### Executing pipeline / workflow
+To clean the directory:
+```
+make clean
+```
 
-The pipeline can be executed in 2 ways:
- - Execute each stage manually
- - Execute with workflow, which executes all stages
+## Logging
 
-### Logging
-
-This template uses logging library. The workflow generates log files that can be found in logs folder. Use logger.info / debug / error / warning instead of print for proper logging when creating new stages.
+This project uses logging library. The workflow generates log files that can be found in logs folder. Use logger.info / debug / error / warning instead of print for proper logging when creating new stages.
