@@ -14,9 +14,19 @@ This is a natural-language processing pipeline. Currently it supports these stag
 
 ## Executing pipeline / workflow
 
-Edit the pipeline_config file to run the stages that you want, and run the following command:
+Edit the pipeline config files to run the stages that you want, and run the following command:
 ```
 make run
+```
+
+To only scrap the wikipedia:
+```
+make wikipedia-scraping
+```
+
+To only run srilm model (only works if you run a scraper pipeline before):
+```
+make srilm-model
 ```
 
 To clean the directory:
