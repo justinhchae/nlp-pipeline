@@ -1,0 +1,20 @@
+---
+topic: countries
+stages:
+- name: frequency_filtering
+  frequency_threshold: 0
+- name: srilm_model
+  ngram: 2
+- name: srilm_model
+  ngram: 3
+- name: srilm_model
+  ngram: 5
+
+- name: frequency_filtering
+  frequency_threshold: 3
+- name: srilm_model
+  ngram: 2
+- name: srilm_model
+  ngram: 3
+- name: srilm_model
+  ngram: 5
