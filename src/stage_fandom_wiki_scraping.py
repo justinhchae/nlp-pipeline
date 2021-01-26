@@ -13,23 +13,6 @@ import requests
 import pywikibot
 
 
-class Family(pywikibot.family.Family):
-    name = 'starwars'
-    langs = {
-        'en': None,
-    }
-    # A few selected big languages for things that we do not want to loop over
-    # all languages. This is only needed by the titletranslate.py module, so
-    # if you carefully avoid the options, you could get away without these
-    # for another wiki family.
-    languages_by_size = ['en']
-    def hostname(self,code):
-        return 'starwars.wikia.com'
-    def path(self, code):
-        return '/index.php'
-    def version(self, code):
-        return "1.9" # Which version of MediaWiki is used?
-
 def get_article_list(site, category):
     """Helper function that finds a list of articles to scrape.
 
@@ -69,7 +52,7 @@ class FandomWikiScrapingStage(BaseStage):
     """Stage for scraping the data from the fandom wiki.
     """
     name = "fandom_wiki_scraping"
-    logger = logging.getLogger("pipeline").getChild("wookieepedia_scraping_stage")
+    logger = logging.getLogger("pipeline").getChild("fandom_wiki_scraping_stage")
 
     def __init__(self, parent=None, category="Jedi_Masters_of_the_Jedi_Order",
                  fandom="starwars", min_num_tokens=500):
