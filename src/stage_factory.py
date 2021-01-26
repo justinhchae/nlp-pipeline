@@ -42,7 +42,7 @@ def create_stage(stage_config):
     del stage_config["name"]
     return stage_name_mapping[stage_name](**stage_config)
 
-def create_pipeline(pipeline_config):
+def create_pipeline(pipeline_config, topic="default"):
     """A factory method for creating a pipeline.
 
     Args:
@@ -53,9 +53,9 @@ def create_pipeline(pipeline_config):
     """
     stages = [create_stage(stage_config) for stage_config in pipeline_config["stages"]]
     del pipeline_config["stages"]
-    return Pipeline(stages=stages, **pipeline_config)
+    return Pipeline(stages=stages, topic=topic, **pipeline_config)
 
-def create_pipeline_from_config(config_filename="pipeline_config.yaml"):
+def create_pipeline_from_config(config_filename="pipeline_config.yaml", topic="default"):
     """A factory method for creating a pipeline from config file.
 
     Args:
@@ -67,5 +67,5 @@ def create_pipeline_from_config(config_filename="pipeline_config.yaml"):
     config_filepath = join(constants.CONFIG_PATH, config_filename)
     with open(config_filepath) as file:
         pipeline_config = yaml.load(file, Loader=yaml.FullLoader)
-        pipeline = create_pipeline(pipeline_config)
+        pipeline = create_pipeline(pipeline_config, topic)
     return pipeline

@@ -1,5 +1,4 @@
 ---
-topic: countries
 stages:
 - name: frequency_filtering
   frequency_threshold: 0

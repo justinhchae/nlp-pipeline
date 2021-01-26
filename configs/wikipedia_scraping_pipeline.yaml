@@ -1,5 +1,4 @@
 ---
-topic: countries
 stages:
 - name: wikipedia_scraping
   sparql_file: countries.sparql

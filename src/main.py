@@ -7,9 +7,10 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Running a pipeline.')
 parser.add_argument('--config-file', action='append', nargs='+')
+parser.add_argument('--topic', nargs='?', default="countries")
 args = parser.parse_args()
 
 run_configuration()
 for config_file in args.config_file:
-    pipeline = create_pipeline_from_config(config_file[0])
+    pipeline = create_pipeline_from_config(config_file[0], topic=args.topic)
     pipeline.execute()
