@@ -69,7 +69,7 @@ class WikipediaScrapingStage(BaseStage):
             sparql_file: file with sparql query for wikidata.
             min_num_tokens: The minimum number of tokens in the article.
         """
-        super(WebScrapingStage, self).__init__(parent)
+        super(WikipediaScrapingStage, self).__init__(parent)
         self.search_query_file_path = join(constants.SQL_SCRIPTS_PATH, sparql_file)
         self.min_num_tokens = min_num_tokens
 
