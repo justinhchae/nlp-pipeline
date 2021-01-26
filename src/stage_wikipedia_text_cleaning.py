@@ -1,4 +1,4 @@
-"""Stage for scrapping the text data from the internet.
+"""Stage for scrapping the text data from the wikipedia.
 """
 from base_stage import BaseStage
 from configuration import run_configuration
@@ -19,11 +19,11 @@ import re
 nltk.download('punkt')
 nltk.download('wordnet')
 
-class TextCleaningStage(BaseStage):
-    """Stage for cleaning text data.
+class WikipediaTextCleaningStage(BaseStage):
+    """Stage for cleaning wikipedia text data.
     """
-    name = "text_cleaning"
-    logger = logging.getLogger("pipeline").getChild("text_cleaning_stage")
+    name = "wikipedia_text_cleaning"
+    logger = logging.getLogger("pipeline").getChild("wikipedia_text_cleaning_stage")
 
     def pre_run(self, args):
         """The function that is executed before the stage is run.

@@ -4,8 +4,8 @@ from stage_corpus_analysis import CorpusAnalysisStage
 from stage_corpus_split import CorpusSplitStage
 from stage_frequency_filtering import FrequencyFilteringStage
 from stage_srilm_model import SRILMModelStage
-from stage_text_cleaning import TextCleaningStage
-from stage_web_scraping import WebScrapingStage
+from stage_wikipedia_text_cleaning import WikipediaTextCleaningStage
+from stage_wikipedia_scraping import WikipediaScrapingStage
 from pipeline import Pipeline
 
 import constants
@@ -14,8 +14,8 @@ from os.path import join
 
 import yaml
 
-possible_stages = [WebScrapingStage,
-                   TextCleaningStage,
+possible_stages = [WikipediaScrapingStage,
+                   WikipediaTextCleaningStage,
                    CorpusAnalysisStage,
                    FrequencyFilteringStage,
                    SRILMModelStage,

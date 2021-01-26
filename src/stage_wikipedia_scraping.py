@@ -1,4 +1,4 @@
-"""Stage for scrapping the text data from the internet.
+"""Stage for scrapping the text data from the wikipedia.
 """
 from base_stage import BaseStage
 from configuration import run_configuration
@@ -56,14 +56,14 @@ def scrape_article(site, query_row, min_num_tokens=500):
         result = ""
     return result
 
-class WebScrapingStage(BaseStage):
-    """Stage for scraping the data from the internet.
+class WikipediaScrapingStage(BaseStage):
+    """Stage for scraping the data from the wikipedia.
     """
-    name = "web_scraping"
-    logger = logging.getLogger("pipeline").getChild("web_scraping_stage")
+    name = "wikipedia_scraping"
+    logger = logging.getLogger("pipeline").getChild("wikipedia_scraping_stage")
 
     def __init__(self, parent=None, sparql_file="search_query.sparql", min_num_tokens=500):
-        """Initialization for Web Scraping stage.
+        """Initialization for Wikipedia Scraping stage.
 
         Args:
             parent: The parent stage.
@@ -81,7 +81,7 @@ class WebScrapingStage(BaseStage):
             args: command line arguments that are passed to the stage.
         """
         self.logger.info("=" * 40)
-        self.logger.info("Executing web scraping stage")
+        self.logger.info("Executing wikipedia scraping stage")
         self.logger.info("-" * 40)
 
     def run(self, args):
@@ -119,5 +119,5 @@ class WebScrapingStage(BaseStage):
             add_help: whether to add help.
         """
         parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Web sraping stage of the pipeline / workflow")
+                                               "Wikipedia sraping stage of the pipeline / workflow")
         return parser
