@@ -1,14 +1,14 @@
 """Factory for stages.
 """
+from pipeline import Pipeline
 from stage_corpus_analysis import CorpusAnalysisStage
 from stage_corpus_split import CorpusSplitStage
+from stage_fandom_wiki_scraping import WookieepediaScrapingStage
+from stage_fandom_wiki_text_cleaning import FandomWikiTextCleaningStage
 from stage_frequency_filtering import FrequencyFilteringStage
 from stage_srilm_model import SRILMModelStage
-from stage_wikipedia_text_cleaning import WikipediaTextCleaningStage
-from stage_wookieepedia_text_cleaning import WookieepediaTextCleaningStage
 from stage_wikipedia_scraping import WikipediaScrapingStage
-from stage_wookieepedia_scraping import WookieepediaScrapingStage
-from pipeline import Pipeline
+from stage_wikipedia_text_cleaning import WikipediaTextCleaningStage
 
 import constants
 
@@ -16,14 +16,14 @@ from os.path import join
 
 import yaml
 
-possible_stages = [WikipediaScrapingStage,
-                   WikipediaTextCleaningStage,
-                   WookieepediaScrapingStage,
-                   WookieepediaTextCleaningStage,
-                   CorpusAnalysisStage,
+possible_stages = [CorpusAnalysisStage,
+                   CorpusSplitStage,
+                   FandomWikiScrapingStage,
+                   FandomWikiTextCleaningStage,
                    FrequencyFilteringStage,
                    SRILMModelStage,
-                   CorpusSplitStage]
+                   WikipediaScrapingStage,
+                   WikipediaTextCleaningStage]
 stage_name_mapping = {s.name: s for s in possible_stages}
 
 def create_stage(stage_config):

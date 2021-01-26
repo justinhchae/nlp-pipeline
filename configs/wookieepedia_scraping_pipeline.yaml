@@ -1,9 +1,10 @@
 ---
 topic: planets
 stages:
-- name: wookieepedia_scraping
-  article_type: Planet_stubs
-- name: wikipedia_text_cleaning
+- name: fandom_wiki_scraping
+  fandom: starwars
+  category: Planet_stubs
+- name: fandom_wiki_text_cleaning
 - name: corpus_split
   splits:
    - name: train

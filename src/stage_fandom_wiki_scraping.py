@@ -30,11 +30,12 @@ class Family(pywikibot.family.Family):
     def version(self, code):
         return "1.9" # Which version of MediaWiki is used?
 
-def get_article_list(article_type, site):
-    """Helper function that performs sparql query to find the articles for scrapping.
+def get_article_list(site, category):
+    """Helper function that finds a list of articles to scrape.
 
     Args:
-        sparql_file_path: the path to the file that contains sparql query.
+        site: pywikibot.Site() to use for selecting articles.
+        category: The category to use for selecting articles.
 
     Returns:
         Pandas data frame containing the result of the query.
@@ -42,10 +43,10 @@ def get_article_list(article_type, site):
     return None
 
 def scrape_article(site, query_row, min_num_tokens=500):
-    """Helper function that scrapes 1 wikipedia article.
+    """Helper function that scrapes 1 fandom wiki article.
 
     Args:
-        site: pywikibot Site.
+        site: pywikibot.Site().
         query_row: 1 row of the result from the sparql query.
         min_num_tokens: required minimum number of tokens in the page.
 
@@ -64,43 +65,47 @@ def scrape_article(site, query_row, min_num_tokens=500):
         result = ""
     return result
 
-class WookieepediaScrapingStage(BaseStage):
-    """Stage for scraping the data from the wikipedia.
+class FandomWikiScrapingStage(BaseStage):
+    """Stage for scraping the data from the fandom wiki.
     """
-    name = "wokieepedia_scraping"
+    name = "fandom_wiki_scraping"
     logger = logging.getLogger("pipeline").getChild("wookieepedia_scraping_stage")
 
-    def __init__(self, parent=None, article_type="Jedi_Masters_of_the_Jedi_Order",
-                 min_num_tokens=500):
-        """Initialization for Wikipedia Scraping stage.
+    def __init__(self, parent=None, category="Jedi_Masters_of_the_Jedi_Order",
+                 fandom="starwars", min_num_tokens=500):
+        """Initialization for Fandom Wiki Scraping stage.
 
         Args:
             parent: The parent stage.
-            article_type: type of articles to look for (e.g. person, planet).
+            category: The category to scrape.
+            fnadom: Which fandom to scrape.
             min_num_tokens: The minimum number of tokens in the article.
         """
-        super(WikipediaScrapingStage, self).__init__(parent)
-        self.article_type = self.article_type
+        super(FandomWikiScrapingStage, self).__init__(parent)
+        self.category = category
+        self.fandom = fandom
         self.min_num_tokens = min_num_tokens
 
     def pre_run(self):
         """The function that is executed before the stage is run.
         """
         self.logger.info("=" * 40)
-        self.logger.info("Executing wikipedia scraping stage")
+        self.logger.info("Executing fandom wiki scraping stage")
+        self.logger.info("Scraping {} articles on the {} fandom.".format(self.category,
+                                                                         self.fandom))
         self.logger.info("-" * 40)
 
     def run(self):
-        """Scraps the articles from wikipedia.
+        """Scraps the articles from fandom wiki.
 
         Returns:
             True if the stage execution succeded, False otherwise.
         """
-        self.logger.info("Querying wikidata for articles to scrape...")
-        article_list = get_article_list(self.search_query_file_path)
-        self.logger.info("Got {} articles.".format(len(article_list)))
+        self.logger.info("Looking for articles to scrape...")
+        site = pywikibot.Site("en", self.fandom)
+        article_list = get_article_list(site, self.category)
+        self.logger.info("Got {} possible articles.".format(len(article_list)))
 
-        site = pywikibot.Site("en", "starwars")
         step_size = len(article_list) // 10
         output_file_path = join(constants.TMP_PATH, "{}.raw.txt".format(self.parent.topic))
         with open(output_file_path, "w") as output_file:

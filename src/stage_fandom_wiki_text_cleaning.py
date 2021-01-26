@@ -1,4 +1,4 @@
-"""Stage for scrapping the text data from the wookieepedia.
+"""Stage for cleaning fandom wiki text.
 """
 from base_stage import BaseStage
 from configuration import run_configuration
@@ -18,21 +18,21 @@ import re
 nltk.download('punkt')
 nltk.download('wordnet')
 
-class WookieepediaTextCleaningStage(BaseStage):
-    """Stage for cleaning wookieepedia text data.
+class FandomWikiTextCleaningStage(BaseStage):
+    """Stage for cleaning fandom wiki text data.
     """
-    name = "wookieepedia_text_cleaning"
-    logger = logging.getLogger("pipeline").getChild("wookieepedia_text_cleaning_stage")
+    name = "fandom_wiki_text_cleaning"
+    logger = logging.getLogger("pipeline").getChild("fandom_wiki_text_cleaning_stage")
 
     def pre_run(self):
         """The function that is executed before the stage is run.
         """
         self.logger.info("=" * 40)
-        self.logger.info("Executing text cleaning stage")
+        self.logger.info("Executing fandom wiki text cleaning stage")
         self.logger.info("-" * 40)
 
     def run(self):
-        """Cleans the text gotten from wikipedia.
+        """Cleans the text gotten from fandom wiki.
 
         Returns:
             True if the stage execution succeded, False otherwise.
