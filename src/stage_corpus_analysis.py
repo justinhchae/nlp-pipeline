@@ -7,7 +7,6 @@ import constants
 
 from os.path import join
 
-import argparse
 import logging
 
 
@@ -27,22 +26,16 @@ class CorpusAnalysisStage(BaseStage):
         super(CorpusAnalysisStage, self).__init__(parent)
         self.corpus_file = corpus_file
 
-    def pre_run(self, args):
+    def pre_run(self):
         """The function that is executed before the stage is run.
-
-        Args:
-            args: command line arguments that are passed to the stage.
         """
         self.logger.info("=" * 40)
         self.logger.info("Executing corpus analysis stage.")
         self.logger.info("Target file: {}".format(self.corpus_file))
         self.logger.info("-" * 40)
 
-    def run(self, args):
+    def run(self):
         """Run analysis on the corpus file.
-
-        Args:
-            args: arguments that are passed to the stage.
 
         Returns:
             True if the stage execution succeded, False otherwise.
@@ -57,14 +50,3 @@ class CorpusAnalysisStage(BaseStage):
         tokens = text.split(" ")
         self.logger.info("Corpus contians {} tokens".format(len(tokens)))
         return True
-
-    def get_argument_parser(self, use_shared_parser=False, add_help=False):
-        """Returns Argument Parser to use for the stage.
-
-        Args:
-            use_shared_parser: whether to use shared parser as parent.
-            add_help: whether to add help.
-        """
-        parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Corpus analysis stage of the pipeline / workflow")
-        return parser

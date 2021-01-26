@@ -7,7 +7,6 @@ import constants
 
 from os.path import join
 
-import argparse
 import logging
 import math
 import random
@@ -30,21 +29,15 @@ class CorpusSplitStage(BaseStage):
         super(CorpusSplitStage, self).__init__(parent)
         self.splits = splits
 
-    def pre_run(self, args):
+    def pre_run(self):
         """The function that is executed before the stage is run.
-
-        Args:
-            args: command line arguments that are passed to the stage.
         """
         self.logger.info("=" * 40)
         self.logger.info("Executing corpus splitting stage")
         self.logger.info("-" * 40)
 
-    def run(self, args):
+    def run(self):
         """Splits the corpus into specified corpora.
-
-        Args:
-            args: arguments that are passed to the stage.
 
         Returns:
             True if the stage execution succeded, False otherwise.
@@ -83,14 +76,3 @@ class CorpusSplitStage(BaseStage):
             with open(output_file_path, "w") as file:
                 file.write(text)
         return True
-
-    def get_argument_parser(self, use_shared_parser=False, add_help=False):
-        """Returns Argument Parser to use for the stage.
-
-        Args:
-            use_shared_parser: whether to use shared parser as parent.
-            add_help: whether to add help.
-        """
-        parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Text cleaning stage of the pipeline / workflow")
-        return parser

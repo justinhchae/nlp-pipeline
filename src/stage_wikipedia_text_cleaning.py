@@ -10,7 +10,6 @@ from nltk.tokenize import word_tokenize
 from os.path import join
 from wiki_dump_reader import Cleaner
 
-import argparse
 import logging
 import nltk
 import re
@@ -25,21 +24,15 @@ class WikipediaTextCleaningStage(BaseStage):
     name = "wikipedia_text_cleaning"
     logger = logging.getLogger("pipeline").getChild("wikipedia_text_cleaning_stage")
 
-    def pre_run(self, args):
+    def pre_run(self):
         """The function that is executed before the stage is run.
-
-        Args:
-            args: command line arguments that are passed to the stage.
         """
         self.logger.info("=" * 40)
         self.logger.info("Executing text cleaning stage")
         self.logger.info("-" * 40)
 
-    def run(self, args):
+    def run(self):
         """Cleans the text gotten from wikipedia.
-
-        Args:
-            args: arguments that are passed to the stage.
 
         Returns:
             True if the stage execution succeded, False otherwise.
@@ -99,14 +92,3 @@ class WikipediaTextCleaningStage(BaseStage):
             num_tokens = len(text.split(" "))
             self.logger.info("Saved the cleaned text. Contains ~ {} tokens".format(num_tokens))
         return True
-
-    def get_argument_parser(self, use_shared_parser=False, add_help=False):
-        """Returns Argument Parser to use for the stage.
-
-        Args:
-            use_shared_parser: whether to use shared parser as parent.
-            add_help: whether to add help.
-        """
-        parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Text cleaning stage of the pipeline / workflow")
-        return parser

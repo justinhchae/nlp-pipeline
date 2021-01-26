@@ -4,12 +4,10 @@ from base_stage import BaseStage
 from configuration import run_configuration
 
 import constants
-import shared_argument_parser
 
 from os.path import join
 
 import logging
-import argparse
 
 
 class Pipeline(BaseStage):
@@ -30,51 +28,29 @@ class Pipeline(BaseStage):
             stage.parent = self
         self.topic = topic
 
-    def get_argument_parser(self):
-        """Returns argument parser for the pipeline / workflow.
-        """
-        parents = [stage.get_argument_parser() for stage in self.stages]
-        parents.append(shared_argument_parser.get_argument_parser(False))
-        parser = argparse.ArgumentParser(parents=parents, description="Data workflow / pipeline")
-
-        stage_names = [stage.name for stage in self.stages]
-        parser.add_argument("--stage", help="list of stages to execute in the workflow / pipeline",
-                            choices=stage_names, nargs="+", default=stage_names)
-        return parser
-
-    def pre_run(self, args):
+    def pre_run(self):
         """The function that is executed before the pipeline / workflow is run.
-
-        Args:
-            args: command line arguments that are passed to the workflow.
         """
         self.logger.info("=" * 40)
         self.logger.info("-" * 40)
         self.logger.info("Starting data pipeline / workflow")
-        self.logger.info("Stages to execute: {}".format(args.stage))
         self.logger.info("-" * 40)
         self.logger.info("=" * 40)
 
-    def run(self, args):
+    def run(self):
         """Run the stages specified in the stage argument.
-
-        Args:
-            args: arguments that are passed to the workflow / pipeline.
 
         Returns:
             True if the workflow / pipeline execution succeded, False otherwise.
         """
         for stage in self.stages:
             self.logger.info("Executing stage '{}'".format(stage.name))
-            if not stage.execute(args):
+            if not stage.execute():
                 return False
 
         return True
 
 if __name__ == "__main__":
     pipeline = Pipeline()
-    argument_parser = pipeline.get_argument_parser()
-
-    args = argument_parser.parse_args()
-    run_configuration(args)
-    pipeline.execute(args)
+    run_configuration()
+    pipeline.execute()

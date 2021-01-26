@@ -8,7 +8,6 @@ import constants
 from os.path import join
 from collections import Counter
 
-import argparse
 import json
 import logging
 
@@ -77,7 +76,7 @@ class FrequencyFilteringStage(BaseStage):
         super(FrequencyFilteringStage, self).__init__(parent)
         self.frequency_threshold = frequency_threshold
 
-    def pre_run(self, args):
+    def pre_run(self):
         """The function that is executed before the stage is run.
 
         Args:
@@ -108,11 +107,8 @@ class FrequencyFilteringStage(BaseStage):
         return dictionary
 
 
-    def run(self, args):
+    def run(self):
         """Run analysis on the corpus file.
-
-        Args:
-            args: arguments that are passed to the stage.
 
         Returns:
             True if the stage execution succeded, False otherwise.
@@ -156,14 +152,3 @@ class FrequencyFilteringStage(BaseStage):
             text = json.dumps(dictionary)
             file.write(text)
         return True
-
-    def get_argument_parser(self, use_shared_parser=False, add_help=False):
-        """Returns Argument Parser to use for the stage.
-
-        Args:
-            use_shared_parser: whether to use shared parser as parent.
-            add_help: whether to add help.
-        """
-        parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Corpus analysis stage of the pipeline / workflow")
-        return parser

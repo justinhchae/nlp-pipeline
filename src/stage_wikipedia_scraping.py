@@ -8,7 +8,6 @@ import constants
 from os.path import join
 from SPARQLWrapper import SPARQLWrapper, JSON
 
-import argparse
 import logging
 import pandas as pd
 import requests
@@ -74,21 +73,15 @@ class WikipediaScrapingStage(BaseStage):
         self.search_query_file_path = join(constants.SQL_SCRIPTS_PATH, sparql_file)
         self.min_num_tokens = min_num_tokens
 
-    def pre_run(self, args):
+    def pre_run(self):
         """The function that is executed before the stage is run.
-
-        Args:
-            args: command line arguments that are passed to the stage.
         """
         self.logger.info("=" * 40)
         self.logger.info("Executing wikipedia scraping stage")
         self.logger.info("-" * 40)
 
-    def run(self, args):
+    def run(self):
         """Scraps the articles from wikipedia.
-
-        Args:
-            args: arguments that are passed to the stage.
 
         Returns:
             True if the stage execution succeded, False otherwise.
@@ -110,14 +103,3 @@ class WikipediaScrapingStage(BaseStage):
             num_tokens = len(output_file.read().split(" "))
             self.logger.info("Scraping finished. Output contains ~ {} tokens".format(num_tokens))
         return True
-
-    def get_argument_parser(self, use_shared_parser=False, add_help=False):
-        """Returns Argument Parser to use for the stage.
-
-        Args:
-            use_shared_parser: whether to use shared parser as parent.
-            add_help: whether to add help.
-        """
-        parser = self.get_base_argument_parser(use_shared_parser, add_help,
-                                               "Wikipedia sraping stage of the pipeline / workflow")
-        return parser
