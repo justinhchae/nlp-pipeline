@@ -5,7 +5,9 @@ from stage_corpus_split import CorpusSplitStage
 from stage_frequency_filtering import FrequencyFilteringStage
 from stage_srilm_model import SRILMModelStage
 from stage_wikipedia_text_cleaning import WikipediaTextCleaningStage
+from stage_wookieepedia_text_cleaning import WookieepediaTextCleaningStage
 from stage_wikipedia_scraping import WikipediaScrapingStage
+from stage_wookieepedia_scraping import WookieepediaScrapingStage
 from pipeline import Pipeline
 
 import constants
@@ -16,6 +18,8 @@ import yaml
 
 possible_stages = [WikipediaScrapingStage,
                    WikipediaTextCleaningStage,
+                   WookieepediaScrapingStage,
+                   WookieepediaTextCleaningStage,
                    CorpusAnalysisStage,
                    FrequencyFilteringStage,
                    SRILMModelStage,
