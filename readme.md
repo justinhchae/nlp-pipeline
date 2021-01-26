@@ -19,6 +19,16 @@ Edit the pipeline_config file to run the stages that you want, and run the follo
 make run
 ```
 
+To only scrap the wikipedia:
+```
+make wikipedia-scraping
+```
+
+To only run srilm model (only works if you run a scraper pipeline before):
+```
+make srilm-model
+```
+
 To clean the directory:
 ```
 make clean
