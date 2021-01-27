@@ -32,18 +32,19 @@ def get_article_list(sparql_file_path):
         results_df = pd.json_normalize(results['results']['bindings'])
         return results_df
 
-def scrape_article(site, query_row, min_num_tokens=500):
+def scrape_article(site, query_row, label_key, min_num_tokens=500):
     """Helper function that scrapes 1 wikipedia article.
 
     Args:
         site: pywikibot Site.
         query_row: 1 row of the result from the sparql query.
+        label_key: a key to use in order to get label.
         min_num_tokens: required minimum number of tokens in the page.
 
     Returns:
         String with the article, if it has more than min_num_tokens tokens.
     """
-    entry_label = query_row["hLabel.value"]
+    entry_label = query_row[label_key]
     try:
         page = pywikibot.Page(site, entry_label)
         num_tokens = len(page.text.split(" "))
@@ -90,12 +91,19 @@ class WikipediaScrapingStage(BaseStage):
         article_list = get_article_list(self.search_query_file_path)
         self.logger.info("Got {} articles.".format(len(article_list)))
 
+        label_key = ""
+        for key in article_list:
+            if "Label" in key and "value" in key:
+                label_key = key
+                break
+
         site = pywikibot.Site("en", "wikipedia")
         step_size = len(article_list) // 10
         output_file_path = join(constants.TMP_PATH, "{}.raw.txt".format(self.parent.topic))
         with open(output_file_path, "w") as output_file:
             for i in range(len(article_list)):
-                output_file.write(scrape_article(site, article_list.iloc[i], self.min_num_tokens))
+                output_file.write(scrape_article(site, article_list.iloc[i], label_key,
+                                                 self.min_num_tokens))
                 if i % step_size == step_size - 1:
                     self.logger.info("Scraped {} articles out of {}".format(i+1, len(article_list)))
 
