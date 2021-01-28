@@ -120,7 +120,11 @@ class CorpusAnalysisStage(BaseStage):
 
         summary_3 = df[df['stop_flag'] == False].reset_index(drop=True).drop(columns='stop_flag')
         summary_3 = summary_3.stb.freq(['text'])
-        summary_3.to_csv('analysis/3_text_summary.csv', index=False)
+        try:
+            summary_3.to_csv('analysis/3_text_summary.csv', index=False)
+        except:
+            self.logger.info("Created Summary 3 File but did not write to disk")
+            self.logger.info("Create folder /analysis and run again")
 
         try:
             df.to_csv('analysis/text_analysis.csv', index=False)
