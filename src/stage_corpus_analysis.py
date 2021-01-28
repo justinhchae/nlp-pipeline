@@ -65,6 +65,7 @@ class CorpusAnalysisStage(BaseStage):
             return x
 
         df['text_strp_unicode'] = df['text_orig'].apply(lambda x: remove_unicode(x))
+        self.logger.info('Stripped Unicode Characters')
 
         def text_strip(x):
             markers = ['<<', '>>']
@@ -88,6 +89,9 @@ class CorpusAnalysisStage(BaseStage):
         df = df[~df['text_strp_punct'].str.contains("<<")]
 
         df['text_strp_punct'] = df['text_strp_punct'].astype('string')
+
+        self.logger.info('Stripped Punctuation but not <<article_start>> or other tags')
+
         df.rename(columns={'text_strp_punct': 'text'}, inplace=True)
         df.reset_index(drop=True, inplace=True)
 
@@ -105,6 +109,8 @@ class CorpusAnalysisStage(BaseStage):
         stops = stops[stops['stop_flag'] == True].reset_index(drop=True)
         stops.drop(columns='stop_flag', inplace=True)
         summary_2 = stops.stb.freq(['text'])
+
+        self.logger.info('Flagged and Removed Stop Words')
 
         try:
             summary_2.to_csv('analysis/2_stops_summary.csv', index=False)
