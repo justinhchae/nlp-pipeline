@@ -8,6 +8,8 @@ __pycache__/
 /logs
 /output
 
+/srilm-1.7.3*
+
 apicache-py3/
 pywikibot.lwp
 throttle.ctrl
