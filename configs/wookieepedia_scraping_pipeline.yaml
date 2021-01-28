@@ -1,4 +1,3 @@
----
 stages:
 - name: fandom_wiki_scraping
   fandom: starwars
