@@ -1,19 +1,20 @@
----
 stages:
-- name: frequency_filtering
+- name: dictionary_creation
   frequency_threshold: 0
-- name: srilm_model
-  ngram: 2
-- name: srilm_model
-  ngram: 3
-- name: srilm_model
-  ngram: 5
+  corpus_file: train.txt
+- name: apply_dictionary
+  corpus_file: train.txt
+- name: apply_dictionary
+  corpus_file: test.txt
+- name: apply_dictionary
+  corpus_file: valid.txt
 
-- name: frequency_filtering
+- name: dictionary_creation
   frequency_threshold: 3
-- name: srilm_model
-  ngram: 2
-- name: srilm_model
-  ngram: 3
-- name: srilm_model
-  ngram: 5
+  corpus_file: train.txt
+- name: apply_dictionary
+  corpus_file: train.txt
+- name: apply_dictionary
+  corpus_file: test.txt
+- name: apply_dictionary
+  corpus_file: valid.txt
