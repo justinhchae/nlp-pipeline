@@ -67,6 +67,8 @@ class WikipediaTextCleaningStage(BaseStage):
             for j in range(len(tokens)):
                 token = tokens[j]
                 token = token.lower()
+                token = token.encode("ascii", "ignore")
+                token = token.decode()
                 token = lemmatizer.lemmatize(token)
                 tokens[j] = token
             article = " ".join(tokens)

@@ -76,14 +76,6 @@ class CorpusAnalysisStage(BaseStage):
 
         df = pd.DataFrame(tokens, columns=['text_orig'])
 
-        def remove_unicode(x):
-            x = x.encode("ascii", "ignore")
-            x = x.decode()
-            return x
-
-        df['text_strp_unicode'] = df['text_orig'].apply(lambda x: remove_unicode(x))
-        self.logger.info('Stripped Unicode Characters')
-
         def text_strip(x):
             markers = ['<<', '>>']
             if any(i in x for i in markers):
@@ -91,7 +83,7 @@ class CorpusAnalysisStage(BaseStage):
             else:
                 return x.translate(str.maketrans('', '', string.punctuation))
 
-        df['text_strp_punct'] = df['text_strp_unicode'].apply(lambda x: text_strip(x))
+        df['text_strp_punct'] = df['text_orig'].apply(lambda x: text_strip(x))
         df_corpus = df[['text_strp_punct']].copy()
 
         try:
