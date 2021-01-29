@@ -7,6 +7,5 @@ sparqlwrapper
 wiki-dump-reader
 wordcloud
 sidetable
-nltk
 matplotlib
 seaborn

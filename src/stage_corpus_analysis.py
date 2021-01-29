@@ -41,6 +41,7 @@ class CorpusAnalysisStage(BaseStage):
         """
         super(CorpusAnalysisStage, self).__init__(parent)
         self.corpus_file = corpus_file
+        self.corpus_stopwords = ['wa']
 
     def pre_run(self):
         """The function that is executed before the stage is run.
@@ -121,7 +122,10 @@ class CorpusAnalysisStage(BaseStage):
         except:
             self.logger.info("Created Text Summary 2 File but did not write to disk")
 
-        df['stop_flag'] = df[['text']].isin(stopwords.words('english')).any(1)
+        stop_words = list(stopwords.words('english'))
+        stop_words.extend(self.corpus_stopwords)
+
+        df['stop_flag'] = df[['text']].isin(stop_words).any(1)
 
         stops = df.copy()
 
