@@ -5,7 +5,8 @@ from stage_corpus_analysis import CorpusAnalysisStage
 from stage_corpus_split import CorpusSplitStage
 from stage_fandom_wiki_scraping import FandomWikiScrapingStage
 from stage_fandom_wiki_text_cleaning import FandomWikiTextCleaningStage
-from stage_frequency_filtering import FrequencyFilteringStage
+from stage_dictionary_creation import DictionaryCreationStage
+from stage_apply_dictionary import ApplyDictionaryStage
 from stage_srilm_model import SRILMModelStage
 from stage_wikipedia_scraping import WikipediaScrapingStage
 from stage_wikipedia_text_cleaning import WikipediaTextCleaningStage
@@ -16,11 +17,12 @@ from os.path import join
 
 import yaml
 
-possible_stages = [CorpusAnalysisStage,
+possible_stages = [ApplyDictionaryStage,
+                   CorpusAnalysisStage,
                    CorpusSplitStage,
+                   DictionaryCreationStage,
                    FandomWikiScrapingStage,
                    FandomWikiTextCleaningStage,
-                   FrequencyFilteringStage,
                    SRILMModelStage,
                    WikipediaScrapingStage,
                    WikipediaTextCleaningStage]

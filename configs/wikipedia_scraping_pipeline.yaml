@@ -1,8 +1,8 @@
----
 stages:
 - name: wikipedia_scraping
   sparql_file: countries.sparql
 - name: wikipedia_text_cleaning
+
 - name: corpus_split
   splits:
    - name: train
