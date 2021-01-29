@@ -1,11 +1,11 @@
+matplotlib
 nltk
 pandas
 pywikibot
 pyyaml
 requests
+seaborn
+sidetable
 sparqlwrapper
 wiki-dump-reader
 wordcloud
-sidetable
-matplotlib
-seaborn
