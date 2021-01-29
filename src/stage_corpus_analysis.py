@@ -42,7 +42,6 @@ class CorpusAnalysisStage(BaseStage):
         """
         super(CorpusAnalysisStage, self).__init__(parent)
         self.corpus_file = corpus_file
-        self.corpus_stopwords = ['wa']
 
     def pre_run(self):
         """The function that is executed before the stage is run.
@@ -164,8 +163,7 @@ class CorpusAnalysisStage(BaseStage):
 
         word_cloud_words = ' '.join(df['text'].values)
 
-        wordcloud = WordCloud(width=800, height=800,
-                              background_color='white',
+        wordcloud = WordCloud(width=800, height=800, background_color='white',
                               min_font_size=10).generate(word_cloud_words)
 
         plt.figure(figsize=(8, 8), facecolor=None)
@@ -180,11 +178,7 @@ class CorpusAnalysisStage(BaseStage):
 
         plt.figure()
         df['z_score_bin'] = pd.qcut(df['text_length_z_score'], 3).reset_index(drop=True)
-        ax = sns.displot(data=df
-                         , x='text_length'
-                         , y='count'
-                         , hue='z_score_bin'
-                         )
+        ax = sns.displot(data=df, x='text_length', y='count', hue='z_score_bin')
 
         plt.ylabel('Word Count')
         plt.xlabel('Word Character Length')
