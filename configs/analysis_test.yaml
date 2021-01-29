@@ -1,0 +1,4 @@
+---
+stages:
+- name: corpus_analysis
+  corpus_file: test.txt
