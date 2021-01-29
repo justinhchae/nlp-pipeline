@@ -66,8 +66,8 @@ class CorpusAnalysisStage(BaseStage):
         with open(corpus_file_path, "r") as file:
             text = file.read()
 
-        output_file_path = join(constants.OUTPUT_PATH,
-                                "{}.{}".format(self.parent.topic, self.corpus_file))
+        output_file_path_prefix = join(constants.OUTPUT_PATH,
+                                       "{}.{}".format(self.parent.topic, self.corpus_file))
 
         tokens = text.split(" ")
 
@@ -86,13 +86,9 @@ class CorpusAnalysisStage(BaseStage):
         df['text_strp_punct'] = df['text_orig'].apply(lambda x: text_strip(x))
         df_corpus = df[['text_strp_punct']].copy()
 
-        try:
-            analysis_type = '1_cleaning_summary.csv'
-            filename = str(output_file_path[:-3] + analysis_type)
-            df.to_csv(filename, index=False)
-
-        except:
-            self.logger.info("Created Summary File 1 but did not write to disk")
+        analysis_type = '1_cleaning_summary.csv'
+        filename = str(output_file_path[:-3] + analysis_type)
+        df.to_csv(filename, index=False)
 
         df['text_strp_punct'].replace('', np.nan, inplace=True)
         df = df[['text_strp_punct']].dropna()
@@ -106,12 +102,9 @@ class CorpusAnalysisStage(BaseStage):
         df.reset_index(drop=True, inplace=True)
 
         summary_2 = df.stb.freq(['text'])
-        try:
-            analysis_type = '2_raw_text_summary.csv'
-            filename = str(output_file_path[:-3] + analysis_type)
-            summary_2.to_csv(filename, index=False)
-        except:
-            self.logger.info("Created Text Summary 2 File but did not write to disk")
+        analysis_type = '2_raw_text_summary.csv'
+        filename = str(output_file_path[:-3] + analysis_type)
+        summary_2.to_csv(filename, index=False)
 
         lemmatizer = WordNetLemmatizer()
         stop_words = [lemmatizer.lemmatize(w) for w in stopwords.words('english')]
@@ -125,36 +118,26 @@ class CorpusAnalysisStage(BaseStage):
 
         self.logger.info('Flagged and Removed Stop Words')
 
-        try:
-            analysis_type = '3_stop_text_summary.csv'
-            filename = str(output_file_path[:-3] + analysis_type)
-            summary_3.to_csv(filename, index=False)
-        except:
-            self.logger.info("Created Summary 3 File but did not write to disk")
+        analysis_type = '3_stop_text_summary.csv'
+        filename = str(output_file_path[:-3] + analysis_type)
+        summary_3.to_csv(filename, index=False)
 
         summary_4 = df[df['stop_flag'] == False].reset_index(drop=True).drop(columns='stop_flag')
         summary_4 = summary_4.stb.freq(['text'])
-        try:
-            analysis_type = '4_cleaned_text_summary.csv'
-            filename = str(output_file_path[:-3] + analysis_type)
-            summary_4.to_csv(filename, index=False)
-        except:
-            self.logger.info("Created Summary 4 File but did not write to disk")
 
-        try:
-            analysis_type = '5_cleaned_text.csv'
-            filename = str(output_file_path[:-3] + analysis_type)
-            df.to_csv(filename, index=False)
+        analysis_type = '4_cleaned_text_summary.csv'
+        filename = str(output_file_path[:-3] + analysis_type)
+        summary_4.to_csv(filename, index=False)
 
-            analysis_type = '5_cleaned_text.pickle'
-            filename = str(output_file_path[:-3] + analysis_type)
-            df.to_pickle(filename, protocol=2)
-        except:
-            self.logger.info("Created Summary Text Analysis File but did not write to disk")
+        analysis_type = '5_cleaned_text.csv'
+        filename = str(output_file_path[:-3] + analysis_type)
+        df.to_csv(filename, index=False)
 
+        analysis_type = '5_cleaned_text.pickle'
+        filename = str(output_file_path[:-3] + analysis_type)
+        df.to_pickle(filename, protocol=2)
 
         stats_dict = {}
-
         unique_words = len(df['text'].unique())
         stats_dict.update({"unique_words_bf_stop":unique_words})
 
@@ -164,13 +147,9 @@ class CorpusAnalysisStage(BaseStage):
 
         frequency = df.stb.freq(['text'])
 
-        try:
-            analysis_type = '6_text_frequency_t10.csv'
-            filename = str(output_file_path[:-3] + analysis_type)
-            frequency[:10].to_csv(filename, index=False)
-
-        except:
-            self.logger.info("Created Summary Text Analysis File but did not write to disk")
+        analysis_type = '6_text_frequency_t10.csv'
+        filename = str(output_file_path[:-3] + analysis_type)
+        frequency[:10].to_csv(filename, index=False)
 
         df = df.groupby(['text'])['text'].agg('count').reset_index(name='count')
 
