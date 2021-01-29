@@ -5,26 +5,23 @@ from configuration import run_configuration
 
 import constants
 
+from collections import deque
+from copy import copy
+from nltk.corpus import stopwords
 from os.path import join
+from scipy import stats
+from statistics import mean, pstdev
+from wordcloud import WordCloud
 
 import logging
-
-import pandas as pd
-import numpy as np
-import string
-from nltk.corpus import stopwords
-import sidetable
-import nltk
-from nltk.corpus import stopwords
-from scipy import stats
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import nltk
+import numpy as np
+import pandas as pd
 import seaborn as sns
+import sidetable
+import string
 
-from collections import deque
-from statistics import mean
-from statistics import pstdev
-from copy import copy
 
 class CorpusAnalysisStage(BaseStage):
     """Stage for analyzing corpus.
@@ -73,7 +70,7 @@ class CorpusAnalysisStage(BaseStage):
         self.logger.info("Corpus contains {} unique tokens".format(len(set(tokens))))
 
         df = pd.DataFrame(tokens, columns=['text_orig'])
-        
+
         def remove_unicode(x):
             x = x.encode("ascii", "ignore")
             x = x.decode()
