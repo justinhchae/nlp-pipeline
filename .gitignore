@@ -43,6 +43,9 @@ MANIFEST
 *.manifest
 *.spec
 
+# Dev/Test
+local_analysis.py
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
