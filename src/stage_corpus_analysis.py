@@ -8,6 +8,7 @@ import constants
 from collections import deque
 from copy import copy
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from os.path import join
 from scipy import stats
 from statistics import mean, pstdev
@@ -21,6 +22,9 @@ import pandas as pd
 import seaborn as sns
 import sidetable
 import string
+
+
+nltk.download("stopwords")
 
 
 class CorpusAnalysisStage(BaseStage):
@@ -58,11 +62,12 @@ class CorpusAnalysisStage(BaseStage):
         corpus_file_path = join(constants.TMP_PATH,
                                 "{}.{}".format(self.parent.topic, self.corpus_file))
 
-        output_file_path = join(constants.OUTPUT_PATH,
-                                "{}.{}".format(self.parent.topic, self.corpus_file))
 
         with open(corpus_file_path, "r") as file:
             text = file.read()
+
+        output_file_path = join(constants.OUTPUT_PATH,
+                                "{}.{}".format(self.parent.topic, self.corpus_file))
 
         tokens = text.split(" ")
 
@@ -98,11 +103,8 @@ class CorpusAnalysisStage(BaseStage):
             self.logger.info("Created Summary File 1 but did not write to disk")
 
         df['text_strp_punct'].replace('', np.nan, inplace=True)
-
         df = df[['text_strp_punct']].dropna()
-
         df = df[~df['text_strp_punct'].str.contains("<<")]
-
         df['text_strp_punct'] = df['text_strp_punct'].astype('string')
 
 
@@ -119,9 +121,8 @@ class CorpusAnalysisStage(BaseStage):
         except:
             self.logger.info("Created Text Summary 2 File but did not write to disk")
 
-        stop_words = list(stopwords.words('english'))
-        stop_words.extend(self.corpus_stopwords)
-
+        lemmatizer = WordNetLemmatizer()
+        stop_words = [lemmatizer.lemmatize(w) for w in stopwords.words('english')]
         df['stop_flag'] = df[['text']].isin(stop_words).any(1)
 
         stops = df.copy()
@@ -253,9 +254,4 @@ class CorpusAnalysisStage(BaseStage):
         stats_dict.update({"article_stdv_len": pstdev(article_lengths)})
 
         self.logger.info(stats_dict)
-
-        # uncomment below to make coprus into sparse numpy arr
-        # arr = df.to_numpy()
-
-
         return True
